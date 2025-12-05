@@ -21,7 +21,6 @@ The application's interface features a matrix where rows represent instruments a
 ### 🧐 What is MIDI?
 
 `MIDI` stands for **Musical Instrument Digital Interface**, a standard protocol for getting different kinds of electronic sound equipment to communicate. `MIDI` data does not actually include any *sound*, but it does include the *instructions* that a MIDI-reading instrument can play back.
-
 Think of a MIDI file like an HTML document and the instrument that renders the MIDI file (i.e. *plays* it) is like the web browser.
 
 ## 🛠️ Technology Stack
