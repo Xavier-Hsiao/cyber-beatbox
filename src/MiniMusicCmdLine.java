@@ -34,7 +34,7 @@ public class MiniMusicCmdLine {
 			/**
 			 * The Message says what to do.
 			 * The MidiEvent says when to do it.
-			 * The MidiEvebt = a combination of the Message + the moment in time when that msg should fire.
+			 * The MidiEvent = a combination of the Message + the moment in time when that msg should fire.
 			 */
 			ShortMessage msg1 = new ShortMessage();
 			msg1.setMessage(ShortMessage.PROGRAM_CHANGE, 1, instrument, 0);

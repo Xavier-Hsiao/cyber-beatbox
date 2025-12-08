@@ -88,3 +88,11 @@ nb-configuration.xml
 ## Miscellaneous
 ##############################
 *.log
+
+##############################
+## Experiments
+##############################
+SimpleAnimation.java
+SimpleGui2.java
+SimpleTextArea.java
+MiniMusicPlayer.java
