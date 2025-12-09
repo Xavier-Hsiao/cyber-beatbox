@@ -77,10 +77,23 @@ public class BeatBox {
             mainPanel.add(cb);
         }
 
-        // Todo: set up Midi
+        setUpMidi();
 
         frame.setBounds(50, 50, 300, 300);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private void setUpMidi () {
+        try {
+            sequencer = MidiSystem.getSequencer();
+            sequencer.open();
+            sequence = new Sequence(Sequence.PPQ, 4);
+            track = sequence.createTrack();
+            sequencer.setTempoInBPM(120);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
