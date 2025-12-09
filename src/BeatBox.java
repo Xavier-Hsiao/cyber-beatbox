@@ -3,12 +3,16 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BeatBox {
     private ArrayList<JCheckBox> checkboxList;
     private Sequencer sequencer;
     private Sequence sequence;
     private Track track;
+
+    private static final Logger logger = Logger.getLogger(BeatBox.class.getName());
 
     // Store the name of the instruments for building the GUI labels
     String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat",
@@ -93,7 +97,7 @@ public class BeatBox {
             sequencer.setTempoInBPM(120);
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "Something went wrong in setUpMidi", e);
         }
     }
 }
