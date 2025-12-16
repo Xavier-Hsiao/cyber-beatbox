@@ -41,15 +41,19 @@ public class BeatBox {
         Box buttonBox = new Box(BoxLayout.Y_AXIS);
 
         JButton start = new JButton("Start");
-        // Todo: addActionListener
+        start.addActionListener(e -> buildTrackAndStart());
         buttonBox.add(start);
 
+        JButton stop = new JButton("Stop");
+        stop.addActionListener(e -> sequencer.stop());
+        buttonBox.add(stop);
+
         JButton upTempo = new JButton("Tempo Up");
-        // Todo: addActionListener
+        upTempo.addActionListener(e -> changeTempo(1.03f));
         buttonBox.add(upTempo);
 
         JButton downTempo = new JButton("Tempo Down");
-        // Todo: addActionListener
+        downTempo.addActionListener(e -> changeTempo(0.97f));
         buttonBox.add(downTempo);
 
         Box nameBox = new Box(BoxLayout.Y_AXIS);
@@ -99,5 +103,73 @@ public class BeatBox {
         catch (Exception e) {
             logger.log(Level.SEVERE, "Something went wrong in setUpMidi", e);
         }
+    }
+
+    private void buildTrackAndStart () {
+        // Hold the values for one instrument across all 16 beats
+        int[] trackList;
+
+        sequence.deleteTrack(track);
+        track = sequence.createTrack();
+
+        // For each of the 16 ROWS (instruments)
+        for (int i = 0; i < 16; i++) {
+            trackList = new int[16];
+
+            int key = instruments[i];
+
+            // For each of the BEATS for this row
+            for (int j = 0; j < 16; j++) {
+                JCheckBox jc = checkboxList.get(j + 16 * i);
+                if (jc.isSelected()) {
+                    trackList[j] = key;
+                }
+                else {
+                    trackList[j] = 0;
+                }
+            }
+
+            makeTracks(trackList);
+            track.add(makeEvent(ShortMessage.CONTROL_CHANGE, 9, 1, 0, 15));
+        }
+
+        track.add(makeEvent(ShortMessage.PROGRAM_CHANGE, 9, 1, 0, 15));
+
+        try {
+            sequencer.setSequence(sequence);
+            sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
+            sequencer.setTempoInBPM(120);
+            sequencer.start();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Something went wrong in buikdTracksAndStart", e);
+        }
+    }
+
+    private void makeTracks (int[] list) {
+        for (int i = 0; i < 16; i++) {
+            int key = list[i];
+
+            if (key != 0) {
+                track.add(makeEvent(ShortMessage.NOTE_ON, 9, key, 100, i));
+                track.add(makeEvent(ShortMessage.NOTE_OFF, 9, key, 100, i + 1));
+            }
+        }
+    }
+
+    private void changeTempo(float tempoMultiplier) {
+        float tempoFactor = sequencer.getTempoFactor();
+        sequencer.setTempoFactor(tempoFactor * tempoMultiplier);
+    }
+
+    public static MidiEvent makeEvent(int cmd, int chnl, int one, int two, int tick) {
+        MidiEvent event = null;
+        try {
+            ShortMessage msg = new ShortMessage();
+            msg.setMessage(cmd, chnl, one, two);
+            event = new MidiEvent(msg, tick);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Something went wrong in makeEvent", e);
+        }
+        return event;
     }
 }
